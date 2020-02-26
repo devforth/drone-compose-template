@@ -1,0 +1,50 @@
+version: '3.5'
+
+services:
+  drone-server:
+    image: drone/drone:1.6.5
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - drone
+    volumes:
+      - ./drone-data:/var/lib/drone/
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    environment:
+      - DRONE_GITHUB=true
+        #CHANGEME: host on which drone is hosted
+      - DRONE_SERVER_HOST=123.123.123.123:80
+      - DRON_SERVER_PROTO=http
+      - DRONE_DATABASE_DRIVER=sqlite3
+      - DRONE_DATABASE_DATASOURCE=/var/lib/drone/drone.sqlite
+        #CHANGEME: change to github username
+      - DRONE_USER_CREATE=username:github_username,admin:true
+        #CHANGEME: github client id of oauth app
+      - DRONE_GITHUB_CLIENT_ID=xxxxxxxxxxxxxxxxxxxx
+        #CHANGEME: github client secret of oauth app
+      - DRONE_GITHUB_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        #CHANGEME: rpc secret key for drone to comuticate between server and agent  
+      - DRONE_RPC_SECRET="secret-key"
+      - DRONE_DEBUG=true
+  drone-agent:
+    image: drone/agent:1.2.1
+    command: agent
+    restart: always
+    depends_on:
+      - drone-server
+    networks:
+      - drone
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DRONE_RPC_HOST=drone-server:80
+      - DRONE_RPC_PROTO=http
+        #CHANGEME: rpc secret key for drone to comuticate between server and agent  
+      - DRONE_RPC_SECRET="secret-key"
+      - DRONE_DEBUG=true
+
+networks:
+  drone:
+    name: drone_network
