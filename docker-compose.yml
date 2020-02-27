@@ -15,7 +15,7 @@ services:
     environment:
       - DRONE_GITHUB=true
       - DRONE_TLS_AUTOCERT=true
-        
+      - DRONE_SERVER_PROTO=https
       - DRONE_SERVER_HOST=${DRONE_SERVER_HOST}
       - DRONE_USER_CREATE=${DRONE_USER_CREATE}
       - DRONE_GITHUB_CLIENT_ID=${DRONE_GITHUB_CLIENT_ID}
