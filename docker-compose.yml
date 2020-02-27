@@ -10,6 +10,7 @@ services:
       - drone
     volumes:
       - ./drone-data:/var/lib/drone/
+      - ./drone-certs:/data
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
     environment:
