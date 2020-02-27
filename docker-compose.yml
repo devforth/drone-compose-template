@@ -41,10 +41,10 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
+      #CHANGEME: rpc secret key for drone to comuticate between server and agent  
+      - DRONE_RPC_SECRET="secret-key"
       - DRONE_RPC_HOST=drone-server:80
       - DRONE_RPC_PROTO=http
-        #CHANGEME: rpc secret key for drone to comuticate between server and agent  
-      - DRONE_RPC_SECRET="secret-key"
       - DRONE_DEBUG=true
 
 networks:
