@@ -42,6 +42,7 @@ services:
       - DRONE_RPC_HOST=drone-server:80
       - DRONE_RPC_PROTO=http
       - DRONE_DEBUG=true
+      - DRONE_MAX_PROCS=4
 
 networks:
   drone:
