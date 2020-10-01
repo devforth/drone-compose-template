@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   drone-server:
-    image: drone/drone:1.6.5
+    image: drone/drone:1.9.1
     ports:
       - 80:80
       - 443:443
@@ -19,16 +19,17 @@ services:
       - DRONE_SERVER_PROTO=https
       - DRONE_SERVER_HOST=${DRONE_SERVER_HOST}
       - DRONE_USER_CREATE=${DRONE_USER_CREATE}
-      - DRONE_GITHUB_CLIENT_ID=${DRONE_GITHUB_CLIENT_ID}
+      - DRONE_GITHUB_CLIENT_ID=${DRONE_GITHUB_CLIENT_ID}        
       - DRONE_GITHUB_CLIENT_SECRET=${DRONE_GITHUB_CLIENT_SECRET}
       - DRONE_RPC_SECRET="${DRONE_RPC_SECRET}"
-      
+
       - DRON_SERVER_PROTO=http
       - DRONE_DATABASE_DRIVER=sqlite3
       - DRONE_DATABASE_DATASOURCE=/var/lib/drone/drone.sqlite
       - DRONE_DEBUG=true
+
   drone-agent:
-    image: drone/agent:1.2.1
+    image: drone/agent:1.6.2
     command: agent
     restart: always
     depends_on:
@@ -37,12 +38,43 @@ services:
       - drone
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    environment: 
+    environment:
       - DRONE_RPC_SECRET="${DRONE_RPC_SECRET}"
       - DRONE_RPC_HOST=drone-server:80
       - DRONE_RPC_PROTO=http
       - DRONE_DEBUG=true
-      - DRONE_MAX_PROCS=4
+
+  drone-agent2:
+    image: drone/agent:1.6.2
+    command: agent
+    restart: always
+    depends_on:
+      - drone-server
+    networks:
+      - drone
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DRONE_RPC_SECRET="${DRONE_RPC_SECRET}"
+      - DRONE_RPC_HOST=drone-server:80
+      - DRONE_RPC_PROTO=http
+      - DRONE_DEBUG=true
+
+  drone-agent3:
+    image: drone/agent:1.6.2
+    command: agent
+    restart: always
+    depends_on:
+      - drone-server
+    networks:
+      - drone
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DRONE_RPC_SECRET="${DRONE_RPC_SECRET}"
+      - DRONE_RPC_HOST=drone-server:80
+      - DRONE_RPC_PROTO=http
+      - DRONE_DEBUG=true
 
 networks:
   drone:
