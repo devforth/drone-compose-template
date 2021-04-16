@@ -27,6 +27,7 @@ services:
       - DRONE_DATABASE_DRIVER=sqlite3
       - DRONE_DATABASE_DATASOURCE=/var/lib/drone/drone.sqlite
       - DRONE_DEBUG=true
+      
 
   drone-agent:
     image: drone/agent:1.6.2
@@ -38,11 +39,15 @@ services:
       - drone
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.docker/config.json:/root/.docker/config.json # docker login on host if file does not exist
+
     environment:
       - DRONE_RPC_SECRET="${DRONE_RPC_SECRET}"
       - DRONE_RPC_HOST=drone-server:80
       - DRONE_RPC_PROTO=http
       - DRONE_DEBUG=true
+      - DRONE_DOCKER_CONFIG=/root/.docker/config.json
+      
 
   drone-agent2:
     image: drone/agent:1.6.2
@@ -54,11 +59,13 @@ services:
       - drone
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.docker/config.json:/root/.docker/config.json # docker login on host if file does not exist
     environment:
       - DRONE_RPC_SECRET="${DRONE_RPC_SECRET}"
       - DRONE_RPC_HOST=drone-server:80
       - DRONE_RPC_PROTO=http
       - DRONE_DEBUG=true
+      - DRONE_DOCKER_CONFIG=/root/.docker/config.json
 
   drone-agent3:
     image: drone/agent:1.6.2
@@ -70,11 +77,15 @@ services:
       - drone
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.docker/config.json:/root/.docker/config.json # docker login on host if file does not exist
     environment:
       - DRONE_RPC_SECRET="${DRONE_RPC_SECRET}"
       - DRONE_RPC_HOST=drone-server:80
       - DRONE_RPC_PROTO=http
       - DRONE_DEBUG=true
+      - DRONE_DOCKER_CONFIG=/root/.docker/config.json
+      
+      
 
 networks:
   drone:
